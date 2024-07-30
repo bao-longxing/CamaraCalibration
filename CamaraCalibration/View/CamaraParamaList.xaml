@@ -1,0 +1,82 @@
+﻿<Page x:Class="CamaraCalibration.CamaraParamaList"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:CamaraCalibration"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="CamaraParamaList">
+
+    <Grid>
+        <materialDesign:Card Padding="32" Margin="16">
+            <TabControl>
+                <TabItem Header="摄像机参数">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                                   Text="摄像机参数" Margin="0,0,0,16"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBox x:Name="txtSiglePixelWidth" materialDesign:HintAssist.Hint="单个像元的宽 (Sx) (μm)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtSiglePixelHight" materialDesign:HintAssist.Hint="单个像元的高 (Sy) (μm)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtFocalLength" materialDesign:HintAssist.Hint="焦距 (mm)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtKappa" materialDesign:HintAssist.Hint="Kappa(1/平方米)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBox x:Name="txtCenterXPoint" materialDesign:HintAssist.Hint="中心点x坐标 (Cx) (像素)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtCenterYPoint" materialDesign:HintAssist.Hint="中心点y坐标 (Cy) (像素)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtImangeWidth" materialDesign:HintAssist.Hint="图像宽 (像素)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtImageHight" materialDesign:HintAssist.Hint="图像高 (像素)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                            </StackPanel>
+                        </Grid>
+                        <Button x:Name="btnSaveCamaraParama" Content="保存" Style="{StaticResource MaterialDesignRaisedButton}" 
+                                Margin="0,16,0,0" HorizontalAlignment="Right" Cursor="Hand"/>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="摄像机位姿">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                                   Text="摄像机位姿" Margin="0,0,0,16"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBox x:Name="txtXPoint" materialDesign:HintAssist.Hint="X (mm)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtYPoint" materialDesign:HintAssist.Hint="Y (mm)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtZPoint" materialDesign:HintAssist.Hint="Z (mm)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBox x:Name="txtXSpinPoint" materialDesign:HintAssist.Hint="X方向旋转 (度)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtYSpinPoint" materialDesign:HintAssist.Hint="Y方向旋转 (度)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                                <TextBox x:Name="txtZSpinPoint" materialDesign:HintAssist.Hint="Z方向旋转 (度)"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"/>
+                            </StackPanel>
+                        </Grid>
+                        <Button x:Name="btnSaveCamaraPoseParama" Content="保存" Style="{StaticResource MaterialDesignRaisedButton}" 
+                                Margin="0,16,0,0" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </materialDesign:Card>
+    </Grid>
+</Page>
