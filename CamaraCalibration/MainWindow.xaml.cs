@@ -15,10 +15,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Drawing;
-using CamaraCalibration.View;
+using CameraCalibration.View;
 using MaterialDesignThemes.Wpf;
 
-namespace CamaraCalibration
+namespace CameraCalibration
 {
 
     /// <summary>
@@ -47,28 +47,32 @@ namespace CamaraCalibration
     {
         private CalibrationData calibrationData;
         private DataControler dataControler;
-        private Camara CamaraPage;
+        private Camera CameraPage;
         private Calibrating CalibratingPage;
         private HalconFuntion HalconFuntion;
         private ViewControler ViewControler;
         private CreateDescrFile CreateDescrFile;
-        private CamaraParamaList camaraParamaList;
+        private CameraParamaList camaraParamaList;
         private AberrationCorrection correction;
+        private PositioningGuidance PositioningGuidance;
+        private MultipointCalibration multipointCalibration;
         public MainWindow()
         {
             InitializeComponent();
             SnackbarManager.Initialize(this.MessageQueue);
             calibrationData = new CalibrationData();
             dataControler = new DataControler(calibrationData);
-            CamaraPage = new Camara(dataControler);
+            CameraPage = new Camera(dataControler);
             CalibratingPage = new Calibrating();
             CreateDescrFile = new CreateDescrFile(dataControler);
-            camaraParamaList = new CamaraParamaList();
+            camaraParamaList = new CameraParamaList();
             correction = new AberrationCorrection();
-            ViewControler = new ViewControler(this, CamaraPage, CalibratingPage, CreateDescrFile,camaraParamaList,dataControler, correction);
+            PositioningGuidance = new PositioningGuidance();
+            multipointCalibration = new MultipointCalibration();
+            ViewControler = new ViewControler(this, CameraPage, CalibratingPage, CreateDescrFile,camaraParamaList,dataControler, correction,PositioningGuidance, multipointCalibration);
             HalconFuntion = new HalconFuntion(dataControler, ViewControler);
             ViewControler.SetHalconFunction(HalconFuntion);
-            AppFrame.Navigate(CamaraPage);
+            AppFrame.Navigate(CameraPage);
         }
         
     }

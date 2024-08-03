@@ -4,8 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:local="clr-namespace:CamaraCalibration"
-      xmlns:HalconDotNet="clr-namespace:HalconDotNet;assembly=halcondotnet" x:Class="CamaraCalibration.Calibrating"
+      xmlns:local="clr-namespace:CameraCalibration"
+      xmlns:HalconDotNet="clr-namespace:HalconDotNet;assembly=halcondotnet" x:Class="CameraCalibration.Calibrating"
       mc:Ignorable="d" 
       Title="Calibrating">
 

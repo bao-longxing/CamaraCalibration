@@ -1,4 +1,4 @@
-﻿using CamaraCalibration.View;
+﻿using CameraCalibration.View;
 using HalconDotNet;
 using System;
 using System.Collections.Generic;
@@ -17,16 +17,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CamaraCalibration
+namespace CameraCalibration
 {
     /// <summary>
-    /// Camara.xaml 的交互逻辑
+    /// Camera.xaml 的交互逻辑
     /// </summary>
-    public partial class Camara : Page
+    public partial class Camera : Page
     {
         CalibrationData calibrationData = null;
         DataControler dataControler = null;
-        public Camara(DataControler data)
+        public Camera(DataControler data)
         {
             InitializeComponent();
             dataControler = data;
@@ -64,7 +64,7 @@ namespace CamaraCalibration
                 return;
             }
             calibrationData = dataControler.GetData();
-            calibrationData.CamaraParama[3] = double.Parse(txtSinglePixelWidth.Text) * 1e-6;
+            calibrationData.CameraParama[3] = double.Parse(txtSinglePixelWidth.Text) * 1e-6;
             dataControler.SetData(calibrationData); 
         }
 
@@ -75,7 +75,7 @@ namespace CamaraCalibration
                 return;
             }
             calibrationData = dataControler.GetData();
-            calibrationData.CamaraParama[4] = double.Parse(txtSinglePixelHeight.Text) * 1e-6;
+            calibrationData.CameraParama[4] = double.Parse(txtSinglePixelHeight.Text) * 1e-6;
             dataControler.SetData(calibrationData);
         }
 
@@ -88,7 +88,7 @@ namespace CamaraCalibration
                     return;
                 }
                 calibrationData = dataControler.GetData();
-                calibrationData.CamaraParama[1] = Convert.ToDouble(txtFocalLength.Text) / 1000;
+                calibrationData.CameraParama[1] = Convert.ToDouble(txtFocalLength.Text) / 1000;
                 dataControler.SetData(calibrationData);
             }
             catch (Exception ex)

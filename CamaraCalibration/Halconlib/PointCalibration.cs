@@ -16,68 +16,51 @@ using HalconDotNet;
  *
  * The wrapped .hdev or .hdpl files have to be located in the folder
  * that is specified in the static ResourcePath property of 
- * Calibaration. 
- * By default, ResourcePath is ${binary_dir}/res_Calibaration.
+ * PointCalibration. 
+ * By default, ResourcePath is ${binary_dir}/res_PointCalibration.
  *
  * It is recommended to compile an assembly from this file using
  * the generated CMakeLists.txt.
  */
 
-namespace CamaraCalibration
+namespace CameraCalibration
 {
-  public static class Calibaration_Halcon
+  public static class PointCalibration
   {
 
-    public static void BulidDataGroup(
-        HTuple CamaraParameters,
-        HTuple DesrFileAddress,
-        out HTuple CalibHandle)
-    {     
-      AddResourcePathToProcedurePath();
-      using (HDevProcedureCall call = _BulidDataGroup.Value.CreateCall())
-      {
-        SetParameter(call,"CamaraParameters",CamaraParameters);
-        SetParameter(call,"DesrFileAddress",DesrFileAddress);
-        call.Execute();
-        CalibHandle = GetParameterHTuple(call,"CalibHandle");
-      }
-    }
-
-    public static void FindCalib(
+    public static void FindCalibrationPoint(
         HObject Image,
-        out HObject Contours,
-        out HObject Cross,
-        HTuple CalibHandle,
-        HTuple Index)
+        out HTuple ArrRow,
+        out HTuple ArrColumn)
     {     
       AddResourcePathToProcedurePath();
-      using (HDevProcedureCall call = _FindCalib.Value.CreateCall())
+      using (HDevProcedureCall call = _FindCalibrationPoint.Value.CreateCall())
       {
         SetParameter(call,"Image",Image);
-        SetParameter(call,"CalibHandle",CalibHandle);
-        SetParameter(call,"Index",Index);
         call.Execute();
-        Contours = GetParameterHObject(call,"Contours");
-        Cross = GetParameterHObject(call,"Cross");
+        ArrRow = GetParameterHTuple(call,"ArrRow");
+        ArrColumn = GetParameterHTuple(call,"ArrColumn");
       }
     }
 
-    public static void GetCamaraCalibrationParama(
-        HTuple CalibHandle,
-        HTuple PlateThickness,
-        out HTuple TmpCtrl_Errors,
-        out HTuple CameraParameters,
-        out HTuple CameraPose)
+    public static void GetAndSaveHomMat2D(
+        HTuple ArrColumn,
+        HTuple ArrRow,
+        HTuple Target_Column,
+        HTuple Target_Row,
+        HTuple HomMat2DSaveAdd,
+        out HTuple HomMat2D)
     {     
       AddResourcePathToProcedurePath();
-      using (HDevProcedureCall call = _GetCamaraCalibrationParama.Value.CreateCall())
+      using (HDevProcedureCall call = _GetAndSaveHomMat2D.Value.CreateCall())
       {
-        SetParameter(call,"CalibHandle",CalibHandle);
-        SetParameter(call,"PlateThickness",PlateThickness);
+        SetParameter(call,"ArrColumn",ArrColumn);
+        SetParameter(call,"ArrRow",ArrRow);
+        SetParameter(call,"Target_Column",Target_Column);
+        SetParameter(call,"Target_Row",Target_Row);
+        SetParameter(call,"HomMat2DSaveAdd",HomMat2DSaveAdd);
         call.Execute();
-        TmpCtrl_Errors = GetParameterHTuple(call,"TmpCtrl_Errors");
-        CameraParameters = GetParameterHTuple(call,"CameraParameters");
-        CameraPose = GetParameterHTuple(call,"CameraPose");
+        HomMat2D = GetParameterHTuple(call,"HomMat2D");
       }
     }
 
@@ -113,16 +96,14 @@ namespace CamaraCalibration
     private static bool _procedure_path_initialized = false;
     private static object _procedure_path_lock = new object();
 
-    private static string _resource_path = "./res_Calibaration";
+    private static string _resource_path = "/res_PointCalibration";
 
     private static Lazy<HDevProgram> _Program
-            = new Lazy<HDevProgram>(() => new HDevProgram(Path.Combine(Calibaration_Halcon.ResourcePath, "CamaraCalibration - ¸±±¾.hdev")));
-    private static Lazy<HDevProcedure> _BulidDataGroup
-            = new Lazy<HDevProcedure>(() => new HDevProcedure(_Program.Value, "BulidDataGroup"));
-    private static Lazy<HDevProcedure> _FindCalib
-            = new Lazy<HDevProcedure>(() => new HDevProcedure(_Program.Value, "FindCalib"));
-    private static Lazy<HDevProcedure> _GetCamaraCalibrationParama
-            = new Lazy<HDevProcedure>(() => new HDevProcedure(_Program.Value, "GetCamaraCalibrationParama"));
+            = new Lazy<HDevProgram>(() => new HDevProgram(System.AppDomain.CurrentDomain.BaseDirectory + _resource_path +"/PointCalibration.hdev"));
+    private static Lazy<HDevProcedure> _FindCalibrationPoint
+            = new Lazy<HDevProcedure>(() => new HDevProcedure(_Program.Value, "FindCalibrationPoint"));
+    private static Lazy<HDevProcedure> _GetAndSaveHomMat2D
+            = new Lazy<HDevProcedure>(() => new HDevProcedure(_Program.Value, "GetAndSaveHomMat2D"));
         
     private static HTuple GetParameterHTuple(HDevProcedureCall call, string name)
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace CamaraCalibration.View
+namespace CameraCalibration.View
 {
     internal class ViewControler
     {
@@ -17,7 +17,7 @@ namespace CamaraCalibration.View
         MainWindow MainWindowPage = null;
         
         //相机参数页面
-        public Camara CamaraPage = null;
+        public Camera CameraPage = null;
 
         //标定文件生成页面
         CreateDescrFile CreateDescrFilePage = null;
@@ -26,7 +26,7 @@ namespace CamaraCalibration.View
         public Calibrating CalibratingPage = null;
 
         //相机参数页面
-        public CamaraParamaList CamaraParamaListPage = null;
+        public CameraParamaList CameraParamaListPage = null;
 
         //数据控制器
         private DataControler DataControler;
@@ -34,30 +34,42 @@ namespace CamaraCalibration.View
         //畸变矫正
         public AberrationCorrection AberrationCorrection;
 
-        public ViewControler(MainWindow main, Camara camara, Calibrating calibrating, CreateDescrFile create,CamaraParamaList camaraParamaList,DataControler dataControler,AberrationCorrection correction)
+        //定位引导
+        public PositioningGuidance PositioningGuidance;
+
+        //生成映射文件
+        public MultipointCalibration MultipointCalibration;
+        
+        public ViewControler(MainWindow main, Camera camara, Calibrating calibrating, CreateDescrFile create,CameraParamaList camaraParamaList,DataControler dataControler,AberrationCorrection correction, PositioningGuidance positioning, MultipointCalibration multipoint)
         {
             MainWindowPage = main;
-            CamaraPage = camara;
+            CameraPage = camara;
             CalibratingPage = calibrating;
             CreateDescrFilePage = create;
-            CamaraParamaListPage = camaraParamaList;
+            CameraParamaListPage = camaraParamaList;
             DataControler = dataControler; 
             AberrationCorrection = correction;
-            CamaraPage.btnCreateDescrFile.Click += BtnCreateDescrFile_Click;//创建Descr文件按钮
+            PositioningGuidance = positioning;
+            MultipointCalibration = multipoint;
+            CameraPage.btnCreateDescrFile.Click += BtnCreateDescrFile_Click;//创建Descr文件按钮
             CreateDescrFilePage.btnCreateDescrFile.Click += BtnGenDescrFile_Click;//生成Descr文件按钮
 
             //Main
             //Menu
-            MainWindowPage.btn_CamaraCalibration.Click += Btn_CamaraCalibration_Click;
+            MainWindowPage.btn_CameraCalibration.Click += Btn_CameraCalibration_Click;
             //畸变矫正
             MainWindowPage.btnAberrationCorrection.Click += BtnAberrationCorrection_Click;
             //打开和关闭相机
-            MainWindowPage.btnOpenCamara.Click += BtnOpenCamara_Click;
-            MainWindowPage.btnCloseCamara.Click += BtnCloseCamara_Click;
+            MainWindowPage.btnOpenCamera.Click += BtnOpenCamera_Click;
+            MainWindowPage.btnCloseCamera.Click += BtnCloseCamera_Click;
+            //生成映射文件
+            MainWindowPage.btnMultipointCalibration.Click += BtnMultipointCalibration_Click;
+            //定位引导
+            MainWindowPage.btnPositioningGuidance.Click += BtnPositioningGuidance_Click;
 
 
             //开始标定
-            CamaraPage.btnStartCalibration.Click += BtnStartCalibration_Click;
+            CameraPage.btnStartCalibration.Click += BtnStartCalibration_Click;
 
             //采集按钮
             CalibratingPage.btnCaptureButton.Click += BtnCaptureButton_Click;
@@ -70,26 +82,115 @@ namespace CamaraCalibration.View
 
 
             //ParamaList
-            //选择CamaraParam文件路径
-            CamaraParamaListPage.btnSaveCamaraParama.Click += BtnSaveCamaraParama_Click;
-            //选择CamaraPose文件路径
-            CamaraParamaListPage.btnSaveCamaraPoseParama.Click += BtnSaveCamaraPoseParama_Click;
+            //选择CameraParam文件路径
+            CameraParamaListPage.btnSaveCameraParama.Click += BtnSaveCameraParama_Click;
+            //选择CameraPose文件路径
+            CameraParamaListPage.btnSaveCameraPoseParama.Click += BtnSaveCameraPoseParama_Click;
 
             //AberrationCorrection
             //读取相机参数文件
-            AberrationCorrection.btnLoadCamaraParama.Click += BtnLoadCamaraParama_Click;
+            AberrationCorrection.btnLoadCameraParama.Click += BtnLoadCameraParama_Click;
             //畸变矫正开关
             AberrationCorrection.tobCorrectionSwitch.Checked += TobCorrectionSwitch_Checked;
             AberrationCorrection.tobCorrectionSwitch.Unchecked += TobCorrectionSwitch_Unchecked;
 
-            //定位引导
-            MainWindowPage.btnPositioningGuidance.Click += BtnPositioningGuidance_Click;
+        
+            //导入映射文件
+            PositioningGuidance.btnInputImageMap.Click += BtnInputImageMap_Click;
+            //生成映射文件入口2
+            PositioningGuidance.btnGenImageMap.Click += BtnMultipointCalibration_Click;
+            //连接Modbus从站
+            PositioningGuidance.btnConnectModbus.Click += BtnConnectModbus_Click;
+            //开始采集
+            PositioningGuidance.btnBeginCapture.Click += BtnBeginCapture_Click;
+            //停止采集
+            PositioningGuidance.btnStopCapture.Click += BtnStopCapture_Click;
+
+            //截取映射文件
+            MultipointCalibration.btnCaptureButton.Click += BtnCaptureButton_Click_MultiPoint;
+            //生成映射文件
+            MultipointCalibration.btnGenImageHomMat2D.Click += BtnGenImageHomMat2D_Click;
+        
+        }
+
+        private void BtnStopCapture_Click(object sender, RoutedEventArgs e)
+        {
+            HalconFuntion.ClosePostGuide();
+        }
+
+        private void BtnBeginCapture_Click(object sender, RoutedEventArgs e)
+        {
+            HalconFuntion.OpenPosGuidance();
+        }
+
+        private void BtnConnectModbus_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (PositioningGuidance.btnConnectModbus.Content.ToString() == "连接")
+                {
+                    HalconFuntion.modbusFunction.Connect(PositioningGuidance.txtModbusIP.Text, PositioningGuidance.txtModbusPort.Text);
+                    SnackbarManager.ShowMessage("连接成功");
+                    PositioningGuidance.btnConnectModbus.Content = "断开";
+                }
+                else if (PositioningGuidance.btnConnectModbus.Content.ToString() == "断开")
+                {
+                    HalconFuntion.modbusFunction.Disconnect();
+                    PositioningGuidance.btnConnectModbus.Content = "连接";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                SnackbarManager.ShowMessage(ex.Message);
+            }
+        }
+
+        private void BtnGenImageHomMat2D_Click(object sender, RoutedEventArgs e)
+        {
+            HalconFuntion.MultiPointGenHomMat2DFile();
+        }
+
+        private void BtnCaptureButton_Click_MultiPoint(object sender, RoutedEventArgs e)
+        {
+            _= HalconFuntion.MultiPointCaptuerAsync();
+        }
+
+        private void BtnMultipointCalibration_Click(object sender, RoutedEventArgs e)
+        {
+            HalconFuntion.CloseCamera();
+            MainWindowPage.AppFrame.Navigate(MultipointCalibration);
+        }
+
+        //获取映射文件地址
+        private void BtnInputImageMap_Click(object sender, RoutedEventArgs e)
+        {
+            CalibrationData calibrationData = DataControler.GetData();
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.InitialDirectory = AppContext.BaseDirectory;
+                openFileDialog.Filter = "映射文件|*.*";
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    calibrationData.HomMat2DAddress = openFileDialog.FileName;
+                    HalconFuntion.ReadHomMat2DForFile();
+                    SnackbarManager.ShowMessage("导入数据成功");
+                }
+                DataControler.SetData(calibrationData);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
         }
 
         private void BtnPositioningGuidance_Click(object sender, RoutedEventArgs e)
         {
-            HalconFuntion.CloseCamara();
-            //MainWindowPage.AppFrame.Navigate();
+            HalconFuntion.CloseCamera();
+            MainWindowPage.AppFrame.Navigate(PositioningGuidance);
         }
 
         private void TobCorrectionSwitch_Unchecked(object sender, RoutedEventArgs e)
@@ -102,30 +203,30 @@ namespace CamaraCalibration.View
             HalconFuntion.CorrectionSwtich = true;
         }
 
-        private void BtnLoadCamaraParama_Click(object sender, RoutedEventArgs e)
+        private void BtnLoadCameraParama_Click(object sender, RoutedEventArgs e)
         {
-            bool result = HalconFuntion.LoadCamaraParamFile();
+            bool result = HalconFuntion.LoadCameraParamFile();
             if (result)
             {
                 AberrationCorrection.txtCameraParametersStatus.Text = "参数已读取";
             }
         }
             
-        private void BtnSaveCamaraPoseParama_Click(object sender, RoutedEventArgs e)
+        private void BtnSaveCameraPoseParama_Click(object sender, RoutedEventArgs e)
         {
-            HalconFuntion.SavaCamaraPoseToFile();
+            HalconFuntion.SavaCameraPoseToFile();
         }
 
-        private void BtnSaveCamaraParama_Click(object sender, RoutedEventArgs e)
+        private void BtnSaveCameraParama_Click(object sender, RoutedEventArgs e)
         {
-            HalconFuntion.SavaCamaraParamaToFile();
+            HalconFuntion.SavaCameraParamaToFile();
         }
 
         private void BtnAberrationCorrection_Click(object sender, RoutedEventArgs e)
         {
-            HalconFuntion.CloseCamara();
+            HalconFuntion.CloseCamera();
             CalibrationData data = DataControler.GetData();
-            if (!(data.CamaraParamra_Finish.Length==0))
+            if (!(data.CameraParamra_Finish.Length==0))
             {
                 AberrationCorrection.txtCameraParametersStatus.Text = "参数已读取";
             }
@@ -139,25 +240,25 @@ namespace CamaraCalibration.View
                 SnackbarManager.ShowMessage("图像数量不足");
                 return;
             }
-            HalconFuntion.CreateCamaraParama();
-            HalconFuntion.CloseCamara();
+            HalconFuntion.CreateCameraParama();
+            HalconFuntion.CloseCamera();
             CalibrationData data = new CalibrationData();
-            MainWindowPage.AppFrame.Navigate(CamaraParamaListPage);
+            MainWindowPage.AppFrame.Navigate(CameraParamaListPage);
             data = DataControler.GetData();
-            CamaraParamaListPage.txtFocalLength.Text = Convert.ToInt32(data.CamaraParamra_Finish[1].O).ToString();
-            CamaraParamaListPage.txtKappa.Text = data.CamaraParamra_Finish[2].O.ToString();
-            CamaraParamaListPage.txtSiglePixelWidth.Text = data.CamaraParamra_Finish[3].O.ToString();
-            CamaraParamaListPage.txtSiglePixelHight.Text = data.CamaraParamra_Finish[4].O.ToString();
-            CamaraParamaListPage.txtCenterXPoint.Text = data.CamaraParamra_Finish[5].O.ToString();
-            CamaraParamaListPage.txtCenterYPoint.Text = data.CamaraParamra_Finish[6].O.ToString();
-            CamaraParamaListPage.txtImangeWidth.Text = data.CamaraParamra_Finish[7].O.ToString();
-            CamaraParamaListPage.txtImageHight.Text = data.CamaraParamra_Finish[8].O.ToString();
-            CamaraParamaListPage.txtXPoint.Text = data.CamaraPose_Finish[0].O.ToString();
-            CamaraParamaListPage.txtYPoint.Text = data.CamaraPose_Finish[1].O.ToString();
-            CamaraParamaListPage.txtZPoint.Text = data.CamaraPose_Finish[2].O.ToString();
-            CamaraParamaListPage.txtXSpinPoint.Text = data.CamaraPose_Finish[3].O.ToString();
-            CamaraParamaListPage.txtYSpinPoint.Text = data.CamaraPose_Finish[4].O.ToString();
-            CamaraParamaListPage.txtZSpinPoint.Text = data.CamaraPose_Finish[5].O.ToString();
+            CameraParamaListPage.txtFocalLength.Text = Convert.ToInt32(data.CameraParamra_Finish[1].O).ToString();
+            CameraParamaListPage.txtKappa.Text = data.CameraParamra_Finish[2].O.ToString();
+            CameraParamaListPage.txtSiglePixelWidth.Text = data.CameraParamra_Finish[3].O.ToString();
+            CameraParamaListPage.txtSiglePixelHight.Text = data.CameraParamra_Finish[4].O.ToString();
+            CameraParamaListPage.txtCenterXPoint.Text = data.CameraParamra_Finish[5].O.ToString();
+            CameraParamaListPage.txtCenterYPoint.Text = data.CameraParamra_Finish[6].O.ToString();
+            CameraParamaListPage.txtImangeWidth.Text = data.CameraParamra_Finish[7].O.ToString();
+            CameraParamaListPage.txtImageHight.Text = data.CameraParamra_Finish[8].O.ToString();
+            CameraParamaListPage.txtXPoint.Text = data.CameraPose_Finish[0].O.ToString();
+            CameraParamaListPage.txtYPoint.Text = data.CameraPose_Finish[1].O.ToString();
+            CameraParamaListPage.txtZPoint.Text = data.CameraPose_Finish[2].O.ToString();
+            CameraParamaListPage.txtXSpinPoint.Text = data.CameraPose_Finish[3].O.ToString();
+            CameraParamaListPage.txtYSpinPoint.Text = data.CameraPose_Finish[4].O.ToString();
+            CameraParamaListPage.txtZSpinPoint.Text = data.CameraPose_Finish[5].O.ToString();
         }
 
         private void BtnClearImagesButton_Click(object sender, RoutedEventArgs e)
@@ -177,42 +278,50 @@ namespace CamaraCalibration.View
 
 
         //Menu
-        private void Btn_CamaraCalibration_Click(object sender, RoutedEventArgs e)
+        private void Btn_CameraCalibration_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowPage.AppFrame.Navigate(CamaraPage);
-            HalconFuntion.CloseCamara();
+            MainWindowPage.AppFrame.Navigate(CameraPage);
+            HalconFuntion.CloseCamera();
         }
         private async void BtnStartCalibration_Click(object sender, RoutedEventArgs e)
         {
             if (HalconFuntion.InitCalibrationParama())
             {
                 MainWindowPage.AppFrame.Navigate(CalibratingPage);
-                HalconFuntion.CloseCamara();
+                HalconFuntion.CloseCamera();
                 Debug.WriteLine("camaraPageTocalibrating");
                 await Task.Delay(500);
-                HalconFuntion.OpenCamara(CalibratingPage);
+                HalconFuntion.OpenCamera(CalibratingPage);
             }
         }
 
-        private void BtnOpenCamara_Click(object sender, RoutedEventArgs e)
+        private void BtnOpenCamera_Click(object sender, RoutedEventArgs e)
         {
             if (CalibratingPage.hSmartWindowControl.IsVisible)
             {
-                HalconFuntion.OpenCamara(CalibratingPage);
+                HalconFuntion.OpenCamera(CalibratingPage);
             }
-            if (CamaraPage.hSmartWindowControl.IsVisible)
+            if (CameraPage.hSmartWindowControl.IsVisible)
             {
-                HalconFuntion.OpenCamara(CamaraPage);
+                HalconFuntion.OpenCamera(CameraPage);
             }
             if (AberrationCorrection.hSmartWindowControl.IsVisible)
             {
-                HalconFuntion.OpenCamara(AberrationCorrection);
+                HalconFuntion.OpenCamera(AberrationCorrection);
+            }
+            if (PositioningGuidance.hSmartWindowControl.IsVisible)
+            {
+                HalconFuntion.OpenCamera(PositioningGuidance);
+            }
+            if (MultipointCalibration.hSmartWindowControl.IsVisible)
+            {
+                HalconFuntion.OpenCamera(MultipointCalibration);
             }
         }
 
-        private void BtnCloseCamara_Click(object sender, RoutedEventArgs e)
+        private void BtnCloseCamera_Click(object sender, RoutedEventArgs e)
         {
-            HalconFuntion.CloseCamara();
+            HalconFuntion.CloseCamera();
         }
 
         //生成Descr文件
@@ -224,9 +333,9 @@ namespace CamaraCalibration.View
         //跳转至文件创建页面
         private void BtnCreateDescrFile_Click(object sender, RoutedEventArgs e)
         {
-            CamaraPage.splCamaraCalibrationList.Visibility = Visibility.Collapsed;
-            CamaraPage.frameCreateDescrFile.Navigate(CreateDescrFilePage);
-            CamaraPage.frameCreateDescrFile.Visibility = Visibility.Visible;
+            CameraPage.splCameraCalibrationList.Visibility = Visibility.Collapsed;
+            CameraPage.frameCreateDescrFile.Navigate(CreateDescrFilePage);
+            CameraPage.frameCreateDescrFile.Visibility = Visibility.Visible;
 
             //防止重复订阅
             CreateDescrFilePage.btnBack.Click -= BtnBack_Click;
@@ -236,8 +345,8 @@ namespace CamaraCalibration.View
         //返回到标定页面
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            CamaraPage.frameCreateDescrFile.Visibility = Visibility.Collapsed;
-            CamaraPage.splCamaraCalibrationList.Visibility = Visibility.Visible;
+            CameraPage.frameCreateDescrFile.Visibility = Visibility.Collapsed;
+            CameraPage.splCameraCalibrationList.Visibility = Visibility.Visible;
         }
 
     }

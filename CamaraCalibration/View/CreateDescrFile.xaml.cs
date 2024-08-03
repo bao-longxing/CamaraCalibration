@@ -1,4 +1,4 @@
-﻿using CamaraCalibration.View;
+﻿using CameraCalibration.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CamaraCalibration
+namespace CameraCalibration
 {
     /// <summary>
     /// CreateDescrFile.xaml 的交互逻辑

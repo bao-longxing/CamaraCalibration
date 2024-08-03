@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CamaraCalibration.Properties
+namespace CameraCalibration.Properties
 {
 
 

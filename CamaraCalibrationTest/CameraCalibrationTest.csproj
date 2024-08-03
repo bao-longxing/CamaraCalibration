@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CamaraCalibration\CamaraCalibration.csproj" />
+    <ProjectReference Include="..\CamaraCalibration\CameraCalibration.csproj" />
   </ItemGroup>
 
   <ItemGroup>

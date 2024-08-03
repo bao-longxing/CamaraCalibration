@@ -53,6 +53,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EasyModbus, Version=5.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyModbusTCP.5.6.0\lib\net40\EasyModbus.dll</HintPath>
+    </Reference>
     <Reference Include="halcondotnet">
       <HintPath>..\..\..\..\..\..\Program Files\MVTec\HALCON-18.11-Progress\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>
@@ -67,6 +70,9 @@
     </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -91,13 +97,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="GetPhysicalCoordinates.cs" />
+    <Compile Include="Halconlib\Calibaration.cs" />
+    <Compile Include="Halconlib\GetPhysicalCoordinates.cs" />
+    <Compile Include="Halconlib\PointCalibration.cs" />
+    <Compile Include="ModbusFunction.cs" />
+    <Compile Include="View\MultipointCalibration.xaml.cs">
+      <DependentUpon>MultipointCalibration.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PositioningGuidance.xaml.cs">
+      <DependentUpon>PositioningGuidance.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AberrationCorrection.xaml.cs">
       <DependentUpon>AberrationCorrection.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Calibaration_Halcon.cs" />
-    <Compile Include="View\CamaraParamaList.xaml.cs">
-      <DependentUpon>CamaraParamaList.xaml</DependentUpon>
+    <Compile Include="View\CameraParamaList.xaml.cs">
+      <DependentUpon>CameraParamaList.xaml</DependentUpon>
     </Compile>
     <Compile Include="HalconFuntion.cs" />
     <Compile Include="View\Calibrating.xaml.cs">
@@ -111,11 +125,19 @@
     </Compile>
     <Compile Include="DataControler.cs" />
     <Compile Include="View\ViewControler.cs" />
+    <Page Include="View\MultipointCalibration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PositioningGuidance.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AberrationCorrection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\CamaraParamaList.xaml">
+    <Page Include="View\CameraParamaList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -123,7 +145,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Camara.xaml">
+    <Page Include="View\Camera.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,8 +161,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\Camara.xaml.cs">
-      <DependentUpon>Camara.xaml</DependentUpon>
+    <Compile Include="View\Camera.xaml.cs">
+      <DependentUpon>Camera.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

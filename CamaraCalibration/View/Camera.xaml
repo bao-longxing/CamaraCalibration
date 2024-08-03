@@ -3,11 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:CamaraCalibration"
-      xmlns:HalconDotNet="clr-namespace:HalconDotNet;assembly=halcondotnet" xmlns:HalconDotNet1="clr-namespace:HalconDotNet;assembly=halcondotnet" x:Class="CamaraCalibration.Camara"
+      xmlns:local="clr-namespace:CameraCalibration"
+      xmlns:HalconDotNet="clr-namespace:HalconDotNet;assembly=halcondotnet" xmlns:HalconDotNet1="clr-namespace:HalconDotNet;assembly=halcondotnet" x:Class="CameraCalibration.Camera"
       mc:Ignorable="d"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      Title="Camara" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+      Title="Camera" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
     <Grid Margin="0,0,0,0">
         
@@ -20,7 +20,7 @@
             </RowDefinition>
         </Grid.RowDefinitions>
         <Frame Grid.Column="0" Grid.Row="0" x:Name="frameCreateDescrFile" NavigationUIVisibility="Hidden"></Frame>
-        <StackPanel x:Name="splCamaraCalibrationList" Width="400" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20">
+        <StackPanel x:Name="splCameraCalibrationList" Width="400" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20">
             <TextBlock Text="相机标定" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,40" />
             <TextBox x:Name="txtSinglePixelWidth" materialDesign:HintAssist.Hint="单个像素宽度(um)" HorizontalAlignment="Center" Margin="0,10"  TextWrapping="Wrap" VerticalAlignment="Top" Width="380" Height="50" Style="{StaticResource MaterialDesignOutlinedTextBox}" LostFocus="txtSinglePixelWidth_LostFocus"/>
             <TextBox x:Name="txtSinglePixelHeight" materialDesign:HintAssist.Hint="单个像素高度(um)" HorizontalAlignment="Center" Margin="0,10"  TextWrapping="Wrap" VerticalAlignment="Top" Width="380" Height="50" Style="{StaticResource MaterialDesignOutlinedTextBox}" LostFocus="txtSinglePixelHeight_LostFocus"/>
@@ -35,6 +35,7 @@
                 <TextBox x:Name="txtDesrFileAddress" materialDesign:HintAssist.Hint="描述文件路径" HorizontalAlignment="Center" Margin="0,10,0,10" Width="220" Height="50" Style="{StaticResource MaterialDesignOutlinedTextBox}" IsReadOnly="True" />
                 <Button x:Name="btnSeclectDescrFile" Grid.Column="1" Content="打开" Width="60" Click="btnSeclectDescrFile_Click"/>
                 <Button x:Name="btnCreateDescrFile" Grid.Column="2" Content="生成" Width="60" />
+                <TextBox x:Name="txtDesrFileAddress复制__C_" materialDesign:HintAssist.Hint="描述文件路径" HorizontalAlignment="Center" Margin="0,10,0,10" Width="220" Height="50" Style="{StaticResource MaterialDesignOutlinedTextBox}" IsReadOnly="True" />
             </Grid>
             <Button x:Name="btnStartCalibration" Content="开始" Margin="10,65,10,0" Cursor="Hand"/>
 

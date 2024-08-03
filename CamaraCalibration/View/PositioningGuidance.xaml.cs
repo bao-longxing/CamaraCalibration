@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace CameraCalibration
 {
     /// <summary>
-    /// AberrationCorrection.xaml 的交互逻辑
+    /// PositioningGuidance.xaml 的交互逻辑
     /// </summary>
-    public partial class AberrationCorrection : Page
+    public partial class PositioningGuidance : Page
     {
-        public AberrationCorrection()
+        public PositioningGuidance()
         {
             InitializeComponent();
         }
